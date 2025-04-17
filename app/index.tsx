@@ -5,10 +5,45 @@ export default function Index() {
   //let numbers: number[]=[0, 0, 0, 1, 0, 0, 0, 0, 0];
   const [numbers, setNumbers]=useState(['',' ', '', '', '', '', '', '', '']);
   const [current, setCurrent] = useState(0);
+  const [usedindexes, setUsedindexes] = useState([99]);
+  const [winner, setWinner]= useState('');
+  let justcounter=1;
+
+  const calculatewinner = () => {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let i=0; i<lines.length; i++) {
+      let x=lines[i][0];
+      let q=lines[i][1];
+      let c=lines[i][2];
+      if (numbers[x]===numbers[q] && numbers[q]===numbers[c] && numbers[c]===numbers[x] && numbers[x]!=='' && numbers[q]!=='' && numbers[c]!=='') {
+        if (numbers[x]=='x') {
+          return 1;
+        }
+        if (numbers[x]=='o') {
+          return 2;
+        }
+      }
+    }
+    return 0;
+  };
 
   function handleclick (a: number) {
-    let newarr: string[]=numbers;
-    newarr.forEach((num, index) => {
+    let inds: number[] = [];
+    inds=usedindexes;
+    if (inds.includes(a)) {
+      justcounter=2;
+    } else {
+      let newarr: string[]=numbers;
+      newarr.forEach((num, index) => {
       if (index==a) {
         if (current==0) {
           newarr[index]='x';
@@ -19,17 +54,32 @@ export default function Index() {
           setCurrent(0);
         }
       }
-    });
-    setNumbers(newarr);
+      });
+      setNumbers(newarr);
+      inds.push(a);
+      setUsedindexes(inds);
+    }
+    if (calculatewinner()==1) {
+      setWinner('X WON!');
+      setUsedindexes([0,1,2,3,4,5,6,7,8]);
+    }
+    if (calculatewinner()==2) {
+      setWinner('O WON!');
+      setUsedindexes([0,1,2,3,4,5,6,7,8]);
+    }
   }
 
   function resetstate () {
     setNumbers(['',' ', '', '', '', '', '', '', '']);
     setCurrent(0);
+    setUsedindexes([]);
+    setWinner('');
   }
 
   return (
     <View style={styles.container}>
+      <Text style={styles.winner}>{winner}</Text>
+      <p></p>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(0)}>{numbers[0]}</TouchableOpacity>
         <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(1)}>{numbers[1]}</TouchableOpacity>
@@ -66,4 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: 20,
   },
+  winner: {
+    fontSize: 40,
+  }
 });
