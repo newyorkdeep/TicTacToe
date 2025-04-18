@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { useState } from "react";
 
 export default function Index() {
@@ -60,11 +60,11 @@ export default function Index() {
       setUsedindexes(inds);
     }
     if (calculatewinner()==1) {
-      setWinner('X WON!');
+      setWinner('❌ WON!');
       setUsedindexes([0,1,2,3,4,5,6,7,8]);
     }
     if (calculatewinner()==2) {
-      setWinner('O WON!');
+      setWinner('⭕️ WON!');
       setUsedindexes([0,1,2,3,4,5,6,7,8]);
     }
   }
@@ -76,26 +76,45 @@ export default function Index() {
     setWinner('');
   }
 
+  function showreset () {
+    let inds: number[] = [];
+    inds=usedindexes;
+    if (inds.length>0) {
+      return <TouchableOpacity onPress={()=> resetstate()}><View style={styles.resetbutton}>Reset</View></TouchableOpacity>;
+    }
+    return null;
+  }
+
+  function symbol (c: string) {
+    if (c=='x') {
+      return <Text>❌</Text>;
+    }
+    if (c=='o') {
+      return <Text>⭕️</Text>;
+    }
+    return '';
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.winner}>{winner}</Text>
       <p></p>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(0)}>{numbers[0]}</TouchableOpacity>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(1)}>{numbers[1]}</TouchableOpacity>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(2)}>{numbers[2]}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(0)}>{symbol(numbers[0])}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(1)}>{symbol(numbers[1])}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(2)}>{symbol(numbers[2])}</TouchableOpacity>
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(3)}>{numbers[3]}</TouchableOpacity>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(4)}>{numbers[4]}</TouchableOpacity>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(5)}>{numbers[5]}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(3)}>{symbol(numbers[3])}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(4)}>{symbol(numbers[4])}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(5)}>{symbol(numbers[5])}</TouchableOpacity>
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(6)}>{numbers[6]}</TouchableOpacity>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(7)}>{numbers[7]}</TouchableOpacity>
-        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(8)}>{numbers[8]}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(6)}>{symbol(numbers[6])}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(7)}>{symbol(numbers[7])}</TouchableOpacity>
+        <TouchableOpacity style={styles.opacity} onPress={()=> handleclick(8)}>{symbol(numbers[8])}</TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={()=> resetstate()}>Reset</TouchableOpacity>
+      {showreset()}
     </View>
 
   );
@@ -114,9 +133,17 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 20,
+    fontSize: 50,
   },
   winner: {
     fontSize: 40,
+    fontWeight: 'bold',
+  },
+  resetbutton: {
+    backgroundColor: '#c9c9c9',
+    borderRadius: 15,
+    color: 'white',
+    padding: 5,
+    marginTop: 15,
   }
 });
